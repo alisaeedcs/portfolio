@@ -133,9 +133,10 @@ export default function Guide() {
     let stopped = false
 
     const track = (e: PointerEvent) => {
-      cursor.current = e.pointerType === 'mouse' ? { x: e.clientX, y: e.clientY } : null
+      cursor.current = { x: e.clientX, y: e.clientY } // a mouse, or the last place a finger touched
     }
     window.addEventListener('pointermove', track, { passive: true })
+    window.addEventListener('pointerdown', track, { passive: true })
 
     const fly = () => {
       if (stopped) return
@@ -250,6 +251,7 @@ export default function Guide() {
     return () => {
       stopped = true
       window.removeEventListener('pointermove', track)
+      window.removeEventListener('pointerdown', track)
       window.clearTimeout(timer)
       cancelAnimationFrame(raf)
       ctx.clearRect(0, 0, cv.width, cv.height)
