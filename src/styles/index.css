@@ -1,0 +1,75 @@
+@import 'tailwindcss';
+
+/*
+  One look, sampled from the references: matte cream plastic, speckled stone grey,
+  frosted translucent shells, a studio-white backdrop. Colour is rare: lime, pink and
+  cobalt only show up where the visitor touches something.
+*/
+:root {
+  --bg: #e8e5de; /* warm stone-cream */
+  --bg-hi: #f7f5f0; /* studio light falling from above */
+  --ink: #2b2a27; /* soft charcoal, never pure black */
+  --muted: #8c887e;
+  --muted-hover: #66635b; /* one step darker than muted, well short of ink */
+  --link: #54514a; /* ordinary-looking link text; darkens to ink on hover */
+  --stone: #9a9d99; /* speckled grey of the device */
+  --shell: rgba(255, 255, 255, 0.55); /* frosted pod */
+  --line: rgba(43, 42, 39, 0.12);
+  --lime: #5cf23a;
+  --pink: #f4879f;
+  --cobalt: #1f2fd0;
+  --accent: var(--cobalt);
+}
+
+@theme {
+  --font-sans: 'Manrope', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+body {
+  background: radial-gradient(90% 80% at 50% 10%, var(--bg-hi), var(--bg) 70%);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  overflow: hidden;
+}
+/* fine speckle, like the stone device */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.2  0 0 0 0 0.2  0 0 0 0.9 -0.35'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.pill {
+  border: 1px solid var(--line);
+  background: var(--shell);
+  backdrop-filter: blur(14px);
+  border-radius: 9999px;
+  box-shadow: 0 6px 24px -10px rgba(43, 42, 39, 0.25);
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+@keyframes drift-a {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(8vmax, 6vmax) scale(1.15); }
+}
+@keyframes drift-b {
+  from { transform: translate(0, 0) scale(1.1); }
+  to { transform: translate(-7vmax, 8vmax) scale(0.95); }
+}
