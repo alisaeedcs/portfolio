@@ -13,11 +13,11 @@ const FADE_MS = 500 // matches the opacity transition below
 const RADIUS = 2.2 // radius of a sphere around the origin that holds every object
 
 const SWING = 0.85 // how far (radians, about 49 degrees) the front-facing robot sways each way
-const SWING_LIMIT = 1.2 // and how far a drag can turn it; the back of the robot has nothing on it, so it never comes round
 
 // Backs the camera off far enough that the object fits the panel at any angle. Zoom is off, so it stays fitted.
 // Most objects turn all the way round on their own. With `swing`, the object stays facing the front and sways gently
-// from side to side instead, and a drag can only turn it so far. When a drag ends, it eases back into the sway.
+// from side to side instead. A drag can spin it all the way round; when the drag ends, it eases back (the short way)
+// to facing the front and carries on swaying.
 function Rig({ swing }: { swing: boolean }) {
   const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera
   const size = useThree((s) => s.size)
@@ -46,7 +46,9 @@ function Rig({ swing }: { swing: boolean }) {
       return
     }
     const target = reduced ? 0 : SWING * Math.sin(clock.elapsedTime * 0.55)
-    azimuth.current += (target - azimuth.current) * 0.05 // ease toward the sway, so letting go never jumps
+    let delta = target - azimuth.current
+    delta -= Math.round(delta / (Math.PI * 2)) * Math.PI * 2 // the short way round, never the long one
+    azimuth.current += delta * 0.05 // ease toward the sway, so letting go never jumps
     camera.position.x = Math.sin(azimuth.current) * radius
     camera.position.z = Math.cos(azimuth.current) * radius
     camera.lookAt(0, 0, 0)
@@ -63,8 +65,6 @@ function Rig({ swing }: { swing: boolean }) {
       autoRotateSpeed={1.1}
       minPolarAngle={0.9}
       maxPolarAngle={Math.PI / 1.9}
-      minAzimuthAngle={swing ? -SWING_LIMIT : -Infinity}
-      maxAzimuthAngle={swing ? SWING_LIMIT : Infinity}
       onStart={() => (dragging.current = true)}
       onEnd={() => (dragging.current = false)}
     />
