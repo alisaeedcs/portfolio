@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { contact } from '../content/contact'
 
 const row = 'grid grid-cols-[1fr] gap-1 py-2.5 md:grid-cols-[9rem_1fr] md:gap-6 md:py-3.5'
@@ -44,7 +44,19 @@ export default function Contact() {
         <li className={row}>
           <span className={label}>email</span>
           <button onClick={copyEmail} className={`cursor-pointer ${value}`} aria-label="Copy email address">
-            {copied ? 'copied.' : `${name} [at] ${domain} [dot] ${tld}`}
+            {/* the address and "copied." dissolve into each other, both when it's copied and when it goes back */}
+            <AnimatePresence mode="popLayout" initial={false}>
+              <motion.span
+                key={copied ? 'copied' : 'address'}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="block"
+              >
+                {copied ? 'copied.' : `${name} [at] ${domain} [dot] ${tld}`}
+              </motion.span>
+            </AnimatePresence>
           </button>
         </li>
       </ul>
