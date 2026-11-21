@@ -28,12 +28,12 @@ export default function Intro() {
             show: { transition: { staggerChildren: 0.14, delayChildren: 0.35 } },
             hide: { transition: { staggerChildren: 0.05, staggerDirection: -1 } },
           }}
-          className="absolute bottom-10 left-6 right-6 md:bottom-14 md:left-10 md:max-w-2xl"
+          className="absolute bottom-10 left-6 right-6 md:bottom-14 md:left-10 md:max-w-2xl [@media(max-height:480px)]:bottom-6 md:[@media(max-height:480px)]:bottom-8"
         >
-          <motion.h2 variants={line} className="text-2xl font-light tracking-tight md:text-4xl">
+          <motion.h2 variants={line} className="text-2xl font-light tracking-tight md:text-4xl [@media(max-height:380px)]:text-lg md:[@media(max-height:380px)]:text-2xl">
             {copy.intro.headline}
           </motion.h2>
-          <motion.p variants={line} className="mt-4 max-w-xl text-sm leading-relaxed text-[var(--muted-hover)] md:text-base">
+          <motion.p variants={line} className="mt-4 max-w-xl text-sm leading-relaxed text-[var(--muted-hover)] md:text-base [@media(max-height:480px)]:hidden">
             {copy.intro.detail}
           </motion.p>
         </motion.div>
