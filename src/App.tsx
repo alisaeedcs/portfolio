@@ -9,6 +9,7 @@ import Projects from './ui/Projects'
 import Guide from './ui/Guide'
 import Intro from './ui/Intro'
 import NameMenu from './ui/NameMenu'
+import SceneBoundary from './ui/SceneBoundary'
 
 // three.js only loads when the visuals are first needed.
 const ExperienceViz = lazy(() => import('./ui/ExperienceViz'))
@@ -48,14 +49,18 @@ export default function App() {
         {section === 'contact' && <Contact key="contact" />}
         {section === 'projects' && <Projects key="projects" />}
         {section === 'projects' && gl && (
-          <Suspense key="projects-viz" fallback={null}>
-            <ProjectsViz />
-          </Suspense>
+          <SceneBoundary key="projects-viz">
+            <Suspense fallback={null}>
+              <ProjectsViz />
+            </Suspense>
+          </SceneBoundary>
         )}
         {section === 'experience' && gl && (
-          <Suspense key="viz" fallback={null}>
-            <ExperienceViz />
-          </Suspense>
+          <SceneBoundary key="viz">
+            <Suspense fallback={null}>
+              <ExperienceViz />
+            </Suspense>
+          </SceneBoundary>
         )}
       </AnimatePresence>
     </main>
