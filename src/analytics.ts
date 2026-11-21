@@ -7,7 +7,6 @@ export function startAnalytics() {
     datadogRum.init({
       applicationId: '67b59fc1-3b26-4249-a788-41da78aa7281',
       clientToken: 'pub8ed6542931906445f29bab2bae07ba88',
-      remoteConfiguration: { id: '6dd3f54b-174f-4e57-83aa-5177ce59d36f' },
       site: 'us5.datadoghq.com',
       service: 'portfolio',
       env: 'prod',
