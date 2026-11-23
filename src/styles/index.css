@@ -73,3 +73,25 @@ body::after {
   from { transform: translate(0, 0) scale(1.1); }
   to { transform: translate(-7vmax, 8vmax) scale(0.95); }
 }
+
+/* A thin scrollbar that stays hidden until the list is being scrolled, then fades away again. */
+.scroll-reveal::-webkit-scrollbar {
+  width: 3px;
+}
+.scroll-reveal::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 3px;
+  transition: background-color 0.3s;
+}
+.scroll-reveal[data-scrolling='true']::-webkit-scrollbar-thumb {
+  background: rgba(140, 136, 126, 0.55);
+}
+@supports not selector(::-webkit-scrollbar) {
+  .scroll-reveal {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  .scroll-reveal[data-scrolling='true'] {
+    scrollbar-color: rgba(140, 136, 126, 0.55) transparent;
+  }
+}

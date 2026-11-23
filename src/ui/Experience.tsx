@@ -1,12 +1,26 @@
+import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { experience } from '../content/experience'
 import { useStore } from '../store'
+import { revealScrollbar } from './revealScrollbar'
+import { reduced } from '../scene/viz/common'
 
 const ease = 'ease-[cubic-bezier(0.22,1,0.36,1)]'
 
 export default function Experience() {
   const openIndex = useStore((s) => s.experienceOpen)
   const setOpenIndex = useStore((s) => s.setExperienceOpen)
+
+  // Only rows with a 3D scene need room kept for it below the list (on phones). A row without one, like school, gets the whole height.
+  const hasScene = openIndex !== null && !!experience[openIndex].viz
+
+  // When a row opens, scroll it into view as it expands, so what appears is never left out of sight inside the list.
+  const rows = useRef<(HTMLLIElement | null)[]>([])
+  useEffect(() => {
+    if (openIndex === null) return
+    const t = window.setTimeout(() => rows.current[openIndex]?.scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' }), 560)
+    return () => window.clearTimeout(t)
+  }, [openIndex])
 
   return (
     <motion.section
@@ -16,15 +30,16 @@ export default function Experience() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className={`absolute left-6 right-6 top-44 overflow-y-auto md:left-10 md:right-10 md:top-44 lg:right-auto lg:max-h-[calc(100%-12rem)] lg:w-[min(40rem,46vw)] ${
-        openIndex === null ? 'max-h-[calc(100%-12rem)]' : 'max-h-[calc(100%-12rem-32vh)]'
+      onScroll={revealScrollbar}
+      className={`scroll-reveal absolute left-6 right-6 top-44 overflow-y-auto transition-[max-height] duration-500 md:left-10 md:right-10 md:top-44 lg:right-auto lg:max-h-[calc(100%-12rem)] lg:w-[min(40rem,46vw)] ${
+        hasScene ? 'max-h-[calc(100%-14rem-32vh)]' : 'max-h-[calc(100%-12rem)]'
       }`}
     >
       <ul>
         {experience.map((r, i) => {
           const open = openIndex === i
           return (
-            <li key={i} className={`transition-[margin] duration-500 ${ease} ${open ? "my-3 md:my-5" : "my-0"}`}>
+            <li key={i} ref={(el) => void (rows.current[i] = el)} className={`transition-[margin] duration-500 ${ease} ${open ? "my-3 md:my-5" : "my-0"}`}>
               <button
                 onClick={() => setOpenIndex(open ? null : i)}
                 aria-expanded={open}

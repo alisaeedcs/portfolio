@@ -4,11 +4,12 @@ import * as THREE from 'three'
 import { reduced, type Cloud, type RGB } from './common'
 
 export const MAX_PINGS = 7
+export const VIEW_REF = 640 // the desktop panel's size in pixels; smaller panels get proportionally smaller dots
 export const PING_SPEED = 0.2 // ring and packet cycles per second; shared so each ring starts as its packet departs
 
 const vert = `
 #define NP ${MAX_PINGS}
-uniform float uSize; uniform float uPR; uniform float uScanY;
+uniform float uSize; uniform float uPR; uniform float uView; uniform float uScanY;
 uniform float uRadial; uniform vec3 uOrigin; uniform float uScanR;
 uniform float uFx; uniform float uFocus; uniform float uTime;
 uniform float uPingOn; uniform vec4 uPing[NP]; uniform vec3 uPingCol[NP];
@@ -53,7 +54,8 @@ void main() {
     m = (1.0 - 0.6 * smoothstep(-0.4, 1.0, rel)) * (0.82 + 0.18 * sin(uTime * 2.4 + h * 6.2831));
   }
   vMod = m;
-  gl_PointSize = uSize * uPR * (1.0 + g * 1.0 + vPing * 1.1) / -mv.z;
+  // uView shrinks the dots with the panel, so a small phone panel looks like the desktop one, just smaller
+  gl_PointSize = max(uSize * uPR * uView * (1.0 + g * 1.0 + vPing * 1.1) / -mv.z, 1.4 * uPR);
   gl_Position = projectionMatrix * mv;
 }`
 
@@ -103,6 +105,7 @@ export default function PointCloud({ data, size = 40, scan = false, pulseFrom, f
         uniforms: {
           uSize: { value: size },
           uPR: { value: Math.min(window.devicePixelRatio, 2) },
+          uView: { value: 1 },
           uScanY: { value: -999 },
           uRadial: { value: pulseFrom ? 1 : 0 },
           uOrigin: { value: new THREE.Vector3(...(pulseFrom ?? [0, 0, 0])) },
@@ -131,8 +134,9 @@ export default function PointCloud({ data, size = 40, scan = false, pulseFrom, f
     })
   }, [pings, mat])
 
-  useFrame(({ clock, camera }) => {
+  useFrame(({ clock, camera, size }) => {
     const t = clock.elapsedTime
+    mat.uniforms.uView.value = Math.min(1.1, Math.min(size.width, size.height) / VIEW_REF)
     if (pulseFrom) mat.uniforms.uScanR.value = reduced ? 1.5 : (t * 1.0) % 5.2
     else if (scan) mat.uniforms.uScanY.value = 1.25 + Math.sin(reduced ? 1 : t * 0.8) * 1.05
     mat.uniforms.uTime.value = reduced ? 0 : t

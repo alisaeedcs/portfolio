@@ -13,8 +13,8 @@ export const COL = {
 export const reduced =
   typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-// Fewer points on phones.
-export const density = typeof window !== 'undefined' && window.innerWidth < 768 ? 0.5 : 1
+// A few fewer points on phones, so they stay smooth. The dots shrink with the panel (see PointCloud), so the scene still looks like the desktop one.
+export const density = typeof window !== 'undefined' && window.innerWidth < 768 ? 0.85 : 1
 
 export const rand = (a: number, b: number) => a + Math.random() * (b - a)
 

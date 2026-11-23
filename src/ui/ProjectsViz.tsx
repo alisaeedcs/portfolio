@@ -112,9 +112,9 @@ export default function ProjectsViz() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
-      className="absolute bottom-12 left-6 right-6 h-[32vh] lg:bottom-auto lg:left-auto lg:right-10 lg:top-32 lg:h-[min(72vh,40rem)] lg:w-[42vw]"
+      className="pointer-events-none absolute bottom-12 left-6 right-6 h-[32vh] lg:bottom-auto lg:left-auto lg:right-10 lg:top-32 lg:h-[min(72vh,40rem)] lg:w-[42vw]"
     >
-      <div aria-hidden className={`h-full w-full transition-opacity duration-500 ${visible ? 'opacity-100' : 'pointer-events-none opacity-0'}`}>
+      <div aria-hidden className={`h-full w-full transition-opacity duration-500 ${visible ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}>
         <Canvas dpr={[1, 1.75]} gl={{ alpha: true, antialias: true }} camera={{ fov: 40, near: 0.1, far: 60, position: [3, 2, 6] }}>
           {shown && <ProjectObject key={shown.id} shape={shown.shape} play={visible} />}
           <Rig swing={shown?.shape === 'robot'} />

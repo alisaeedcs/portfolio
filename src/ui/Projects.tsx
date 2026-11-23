@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { projects } from '../content/projects'
 import { useStore } from '../store'
+import { revealScrollbar } from './revealScrollbar'
 
 const ease = 'ease-[cubic-bezier(0.22,1,0.36,1)]'
 
@@ -16,8 +17,9 @@ export default function Projects() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className={`absolute left-6 right-6 top-44 overflow-y-auto md:left-10 md:right-10 md:top-44 lg:right-auto lg:max-h-[calc(100%-12rem)] lg:w-[min(40rem,46vw)] ${
-        openIndex === null ? 'max-h-[calc(100%-12rem)]' : 'max-h-[calc(100%-12rem-32vh)]'
+      onScroll={revealScrollbar}
+      className={`scroll-reveal absolute left-6 right-6 top-44 overflow-y-auto md:left-10 md:right-10 md:top-44 lg:right-auto lg:max-h-[calc(100%-12rem)] lg:w-[min(40rem,46vw)] ${
+        openIndex === null ? 'max-h-[calc(100%-12rem)]' : 'max-h-[calc(100%-14rem-32vh)]'
       }`}
     >
       <ul>

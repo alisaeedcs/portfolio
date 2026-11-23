@@ -29,7 +29,7 @@ const LIME: RGB = [0.48, 0.82, 0.24]
 const TEALG: RGB = [0.08, 0.55, 0.5]
 const LEAF_YELLOW: RGB = [0.78, 0.82, 0.3]
 function leaf(kind: number, t: number): RGB {
-  if (kind === 2) return mix(COL.pink, [1, 0.8, 0.85], clamp01(t)) // blossom
+  if (kind === 2) return mix([0.9, 0.36, 0.52], [0.98, 0.58, 0.68], clamp01(t)) // blossom: a richer pink, so it still shows on the cream
   if (kind === 1) return mix(TEALG, LIME, clamp01(t))
   return t < 0.6 ? mix(DEEP, LIME, t / 0.6) : mix(LIME, LEAF_YELLOW, (t - 0.6) / 0.4)
 }
@@ -126,11 +126,13 @@ export default function Forest() {
         [-0.3, -0.1, -0.15, 0.45],
         [0.05, 0.28, -0.25, 0.4],
       ]
+      if (t.kind === 2) blobs.push([0, 0.38, 0, 0.5]) // blossom trees get a fuller top, where the pink shows most
+      const fill = t.kind === 2 ? 1.6 : 1
       for (const [dx, dy, dz, rad] of blobs) {
         const cx = t.x + dx * t.r * 8
         const cy = y0 + t.h + dy
         const cz = t.z + dz * t.r * 8
-        for (let i = 0; i < 320 * m; i++) {
+        for (let i = 0; i < 320 * m * fill; i++) {
           const u = Math.random() * 2 - 1
           const a = rand(0, Math.PI * 2)
           const s = Math.sqrt(1 - u * u)
